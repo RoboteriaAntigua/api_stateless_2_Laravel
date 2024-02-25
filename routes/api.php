@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+Route::middleware('auth:sanctum')->group( function(){
+    Route::get('/home', [AuthController::class,'index']);
+    Route::get('/logout',[AuthController::class,'logout']);
+}
+);
+
+Route::controller(AuthController::class)->group( function() {
+    Route::post('/register','store');
+    Route::post('/login', 'login');
+    Route::post('/logout', 'destroy');
+    Route::post('/resetPassword', 'update');
 });
+
+Route::get('/pruebaInicial', function(){ return response()->json('hola aqui prueba inicial');});
